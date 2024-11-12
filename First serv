@@ -1,0 +1,34 @@
+#include <Servo.h>
+
+// const int redPin = 4;
+const int buttonPin = 7; // copper "button" yellow wire
+int buttonState = 0;
+int previousButtonState = 0;
+
+Servo myservo;
+
+void setup() {
+  myservo.attach(13); //yellow wire for servo
+  pinMode(buttonPin, INPUT);
+  // pinMode(redPin, OUTPUT);
+  Serial.begin(9600);
+
+  // digitalWrite(redPin, LOW);
+}
+
+void loop() {
+  buttonState = digitalRead(buttonPin);
+
+  if (buttonState != previousButtonState) {
+    if (buttonState == HIGH) {
+      Serial.println("button pressed");
+      myservo.write(90);
+      // digitalWrite(redPin, HIGH);
+    } else {
+      Serial.println("button released");
+      // digitalWrite(redPin, LOW);
+      myservo.write(0);
+    }
+  }
+  previousButtonState = buttonState;
+}
