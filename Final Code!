@@ -1,0 +1,102 @@
+#include <Servo.h>
+
+const int buttonPin1 = 8; // copper "button" yellow wire
+const int buttonPin2 = 7;
+const int buttonPin3 = 6;
+const int buttonPin4 = 5;
+const int lightPin1 = 4;
+const int lightPin2 = 3;
+int buttonState1 = 0;
+int previousButtonState1 = 0;
+int buttonState2 = 0;
+int previousButtonState2 = 0;
+int buttonState3 = 0;
+int previousButtonState3 = 0;
+int buttonState4 =0;
+int previousButtonState4 = 0;
+
+
+Servo servo1;
+Servo servo2;
+Servo servo3;
+Servo servo4;
+Servo servo5;
+
+void setup() {
+  servo1.attach(13); //bottom of red dragon
+  servo2.attach(12);//top of red dragon
+  servo3.attach(11);//further to user
+  servo4.attach(10);//closer from user
+  servo5.attach(9);//top to drop falin
+  pinMode(buttonPin1, INPUT);
+  pinMode(buttonPin2, INPUT);
+  pinMode(buttonPin3, INPUT);
+  pinMode(buttonPin4, INPUT);
+  pinMode(lightPin1, OUTPUT);
+  pinMode(lightPin2, OUTPUT);
+  Serial.begin(9600);
+
+  // digitalWrite(redPin, LOW);
+}
+
+void loop() {
+  buttonState1 = digitalRead(buttonPin1);
+  buttonState2 = digitalRead(buttonPin2);
+  buttonState3 = digitalRead(buttonPin3);
+  buttonState4 = digitalRead(buttonPin4);
+
+  if (buttonState1 != previousButtonState1) {//when the sword stabs into the "throat", this will cause the dragon image to flip to the wall
+    if (buttonState1 == HIGH) {
+      Serial.println("button pressed");
+      servo1.write(5);
+      servo2.write(175);
+      // digitalWrite(redPin, HIGH);
+    } else {
+      Serial.println("button released");
+      // digitalWrite(redPin, LOW);
+      servo1.write(90);
+      servo2.write(85);
+      digitalWrite(lightPin1, HIGH);
+      delay(200);
+      digitalWrite(lightPin1, LOW);
+    }
+  }
+  previousButtonState1 = buttonState1;
+  
+  if (buttonState2 != previousButtonState2) {//when the bones are removed, the now incomplete circuit causes the floor to raise and reveal the hidden circle
+    if (buttonState2 == HIGH) {
+      Serial.println("button pressed");
+      servo3.write(90);
+      servo4.write(180);
+    } else {
+      Serial.println("button released");
+      delay(3000);
+      servo3.write(180);
+      servo4.write(90);
+    }
+   previousButtonState2 = buttonState2;
+  }
+    if (buttonState3 != previousButtonState3) {//once the bones and staff are placed, the cricuit is complete, and the servo is activated to drop Falin into range of the user
+    if (buttonState3 == HIGH) {
+      Serial.println("button pressed");
+      servo5.write(0);
+      // digitalWrite(redPin, HIGH);
+    } else {
+      Serial.println("button released");
+      // digitalWrite(redPin, LOW);
+      servo5.write(180);
+    }
+  }
+  previousButtonState3 = buttonState3;
+
+    if (buttonState4 != previousButtonState4) {//with the falin circuit complete, the light turns on, and the mission is complete!
+    if (buttonState4 == HIGH) {
+      Serial.println("button pressed");
+      // digitalWrite(redPin, HIGH);
+    } else {
+      Serial.println("button released");
+      // digitalWrite(redPin, LOW);
+    }
+  }
+  previousButtonState4 = buttonState4;
+}
